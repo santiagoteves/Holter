@@ -11,6 +11,7 @@ class RegisterScreenState extends State<RegisterScreen>{
   final TextEditingController _nameController = TextEditingController();
   final TextEditingController _surnameController = TextEditingController();
   final TextEditingController _emailController = TextEditingController();
+  final TextEditingController _passwordController = TextEditingController();
   final TextEditingController _confirmPasswordController = TextEditingController();
 
   @override
@@ -43,7 +44,7 @@ class RegisterScreenState extends State<RegisterScreen>{
               ),
             ),
             TextField(
-              controller: _confirmPasswordController,
+              controller: _passwordController,
               decoration: const InputDecoration(
                 labelText: 'Contraseña'
               ),
