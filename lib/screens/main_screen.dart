@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:holter_app/screens/profile.dart';
 
 class HealtMonitoringPage extends StatelessWidget{
   const HealtMonitoringPage({super.key});
@@ -16,6 +17,10 @@ class HealtMonitoringPage extends StatelessWidget{
           IconButton(
             icon: const Icon(Icons.account_circle),
             onPressed: (){
+              Navigator.push(
+                context,
+                MaterialPageRoute(builder: (context) =>  const ProfilePage()),
+              );
             },
           ),
         ],
@@ -102,7 +107,9 @@ class HealtMonitoringPage extends StatelessWidget{
               child: Padding(
                 padding: const EdgeInsets.all(16.0),
                 child: ElevatedButton(
-                  onPressed: () {},
+                  onPressed: () {
+                    
+                  },
                   child: const Text('Guardar'),
                 ),
               ),

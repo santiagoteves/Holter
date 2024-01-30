@@ -1,8 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:holter_app/screens/main_screen.dart';
+import 'package:holter_app/screens/forgot_password.dart';
+import 'package:holter_app/screens/register_screen.dart';
 
 class LoginScreen extends StatefulWidget{
-  const LoginScreen({Key? key}) : super(key: key);
+  const LoginScreen({super.key});
 
 @override
 LoginSCreenState createState() => LoginSCreenState();
@@ -35,11 +37,16 @@ class LoginSCreenState extends State<LoginScreen>{
   }
   
   void forgotPassword(){
-
+    Navigator.push(
+      context,MaterialPageRoute(builder:(context) => ForgotPasswordScreen()),
+    );
   }
 
   void register(){
-    
+    Navigator.push(
+      context,
+      MaterialPageRoute(builder:(context) => const RegisterScreen()),
+    );
   }
 
   @override

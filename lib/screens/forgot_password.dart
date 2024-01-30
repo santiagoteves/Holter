@@ -1,7 +1,10 @@
 import 'package:flutter/material.dart';
 
 class ForgotPasswordScreen extends StatelessWidget{
-  const ForgotPasswordScreen({super.key});
+  ForgotPasswordScreen({super.key});
+
+  final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
+  final TextEditingController emailController = TextEditingController();
 
   @override
   Widget build(BuildContext context){
@@ -25,10 +28,24 @@ class ForgotPasswordScreen extends StatelessWidget{
                 border: OutlineInputBorder(),
               ),
               keyboardType: TextInputType.emailAddress,
+              validator: (value){
+                if (value == null || value.isEmpty){
+                  return 'Por favor ingrese su correo electronico';
+                }
+                if (!RegExp(r"^[a-zA-Z0-9.]+@[a-zA-Z0-9]+\.[a-zA-Z]+").hasMatch(value)){
+                  return 'Por favor ingrese un correo electronico valido';
+                }
+                return null;
+              },
             ),
             const SizedBox(height: 20),
             ElevatedButton(
               onPressed: (){
+                if (_formKey.currentState!.validate()){
+                  ScaffoldMessenger.of(context).showSnackBar(
+                    const SnackBar(content: Text('Processing data')),
+                  );
+                }
               },
               child: const Text('Enviar link de restablecimiento'),
             )
