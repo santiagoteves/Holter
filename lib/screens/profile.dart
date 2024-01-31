@@ -5,6 +5,8 @@ import 'package:image_picker/image_picker.dart';
 class ProfilePage extends StatefulWidget {
   const ProfilePage({super.key});
 
+  
+
   @override
   ProfilePageState createState() => ProfilePageState();
 }
@@ -77,6 +79,8 @@ class ProfilePageState extends State<ProfilePage> {
 
 class EditProfilePage extends StatelessWidget {
   const EditProfilePage({super.key});
+
+  
 
   @override
   Widget build(BuildContext context) {

@@ -6,6 +6,8 @@ import 'package:holter_app/screens/register_screen.dart';
 class LoginScreen extends StatefulWidget{
   const LoginScreen({super.key});
 
+  
+
 @override
 LoginSCreenState createState() => LoginSCreenState();
 }
@@ -52,33 +54,73 @@ class LoginSCreenState extends State<LoginScreen>{
   @override
   Widget build(BuildContext context){
     return Scaffold(
-      body: Center(child: Padding(padding: const EdgeInsets.all(20.0),
-      child: Column(
-        mainAxisAlignment: MainAxisAlignment.center,
-        children: <Widget>[
-          Container(
-          margin: const EdgeInsets.only(bottom: 50.0),
-          child: Image.asset('lib/images/Heart_holter.png', height: 150,),),
+      body: Container (
+        decoration: BoxDecoration(
+          gradient: LinearGradient(
+            begin:Alignment.topCenter,
+            end: Alignment.bottomCenter,
+            colors: [
+              Colors.blue.shade400,
+              Colors.blue.shade900,
+            ],
+          ),
+        ),
+        child:Center(
+          child:Padding(
+            padding: const EdgeInsets.all(20.0),
+            child: Column(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: <Widget>[
+                Image.asset('lib/images/Heart_holter.png',height: 150,),
           const SizedBox(height: 20.0,),
           const Text(
             'Iniciar Sesion',
-            style: TextStyle(fontSize: 32.0,fontWeight: FontWeight.bold),
+            style: TextStyle(fontSize: 32.0,fontWeight: FontWeight.bold,color:Colors.white,),
           ),
           const SizedBox(height: 20.0,),
           TextFormField(
             keyboardType: TextInputType.emailAddress,
             controller: emailController,
-            decoration: const InputDecoration(
+            decoration:  InputDecoration(
               labelText: 'Email',
               hintText: 'Ejemplo@gmail.com',
+              labelStyle: const TextStyle(
+                color: Colors.white,
+              ),
+              hintStyle: TextStyle(
+                color: Colors.white.withOpacity(0.5),
+              ),
+              enabledBorder: OutlineInputBorder(
+                borderSide: BorderSide(
+                  color: Colors.white.withOpacity(0.5),
+                ),
+              ),
+              focusedBorder: const OutlineInputBorder(
+                borderSide: BorderSide(
+                  color: Colors.white,
+                ),
+              ),
             ),
           ),
           const SizedBox(height: 15.0,),
           TextFormField(
             obscureText: true,
             controller: passwordController,
-            decoration: const InputDecoration(
+            decoration: InputDecoration(
               labelText: 'Contraseña',
+              labelStyle: const TextStyle(
+                color: Colors.white,
+              ),
+              enabledBorder: OutlineInputBorder(
+                borderSide: BorderSide(
+                  color: Colors.white.withOpacity(0.5),
+                ),
+              ),
+              focusedBorder: const OutlineInputBorder(
+                borderSide: BorderSide(
+                  color: Colors.white,
+                ),
+              ),
             ),
           ),
           const SizedBox(height: 30.0,),
@@ -86,24 +128,48 @@ class LoginSCreenState extends State<LoginScreen>{
             width: double.infinity,
             child: ElevatedButton(
               onPressed: iniciarSesion,
+              style: ElevatedButton.styleFrom(
+                backgroundColor: Colors.white,
+                foregroundColor: Colors.blue.shade900,
+                shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(30.0),
+                ),
+              ),
               child: const Text('Iniciar Sesion'),
           ),
         ),
+        const SizedBox(height: 10.0),
         TextButton(
           onPressed: forgotPassword,
           child: const Text('Olvidaste la constraseña?',
-            style: TextStyle(color:Colors.blue)
+            style: TextStyle(color:Colors.white)
           ),
         ),
+        const SizedBox(height: 10.0),
         TextButton(
           onPressed: register,
           child: const Text('Registrate',
-            style: TextStyle(color: Colors.blue),
+            style: TextStyle(color: Colors.white),
           ),
+        ),
+        const SizedBox(height: 10.0),
+        ElevatedButton.icon(
+          onPressed: (){},
+            icon: const Icon(Icons.login_rounded),
+            label: const Text('Iniciar Sesion con Google'),
+            style: ElevatedButton.styleFrom(
+              backgroundColor: Colors.white,
+              foregroundColor: Colors.blue.shade900,
+              shape: RoundedRectangleBorder(
+                borderRadius: BorderRadius.circular(30.0)
+              )
+            ),
         )
         ],
       ),
-      )),
-    );
+    ),
+  ),
+  ),
+  );
   }
 }
