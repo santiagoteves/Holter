@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:holter_app/screens/main_screen.dart';
 import 'package:holter_app/screens/forgot_password.dart';
 import 'package:holter_app/screens/register_screen.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 
 class LoginScreen extends StatefulWidget{
   const LoginScreen({super.key});
@@ -17,25 +18,36 @@ class LoginSCreenState extends State<LoginScreen>{
   final TextEditingController emailController = TextEditingController();
   final TextEditingController passwordController = TextEditingController();
 
-  void iniciarSesion(){
+void iniciarSesion() async {
+      final context = this.context;
       String email = emailController.text;
       String password = passwordController.text;
 
       if(email.isEmpty || password.isEmpty){
         ScaffoldMessenger.of(context).showSnackBar(
-          const SnackBar(content:   Text('Por favor complete los campos.'))
+          const SnackBar(content: Text('Por favor complete los campos.'))
         );
-      }else if (email == 'admin' && password == 'admin') {
-        Navigator.push(
-          context, 
-          MaterialPageRoute(builder: (context) => const HealtMonitoringPage()),
-        );
-      } else{
-        ScaffoldMessenger.of(context).showSnackBar(
-          const SnackBar(content:   Text('Email o contraseña no valida.'))
-        );
+      }else {
+        try{
+          await FirebaseAuth.instance.signInWithEmailAndPassword(
+            email: email,
+            password: password,
+          );
+          Navigator.push(context, MaterialPageRoute(builder: (context) => const HealtMonitoringPage()));
+        }on FirebaseAuthException catch (e){
+          if (e.code == "user-not-found"){
+            ScaffoldMessenger.of(context).showSnackBar(
+              const SnackBar(content: Text('No se encontro usuario con ese correo'))
+            );
+          }else if (e.code == "wrong-password"){
+            ScaffoldMessenger.of(context).showSnackBar(
+              const SnackBar(content: Text('Contraseña incorrecta'))
+            );
+          }
+        }catch (e){
+          print(e);
+        }
       }
-
   }
   
   void forgotPassword(){

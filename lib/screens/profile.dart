@@ -19,7 +19,8 @@ class ProfilePageState extends State<ProfilePage> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: const Text('Profile'),
+        title: const Text('Profile',style: TextStyle(color: Colors.white)),
+        backgroundColor: Colors.blue.shade400,
         actions: <Widget>[
           TextButton(
             onPressed: () {
@@ -32,7 +33,18 @@ class ProfilePageState extends State<ProfilePage> {
           ),
         ],
       ),
-      body: Column(
+      body: Container(
+        decoration: BoxDecoration(
+          gradient: LinearGradient(
+            begin: Alignment.topCenter,
+            end:Alignment.bottomCenter,
+            colors: [
+              Colors.blue.shade400,
+              Colors.blue.shade900,
+            ]
+          )
+        ),
+      child: Column(
         children: <Widget>[
           Padding(
             padding: const EdgeInsets.all(8.0),
@@ -45,12 +57,13 @@ class ProfilePageState extends State<ProfilePage> {
               },
               child: CircleAvatar(
                 radius: 30,
+                backgroundColor: Colors.white,
                 backgroundImage: _imageFile != null ? FileImage(File(_imageFile!.path)) : null,
-                child: _imageFile == null ? const Text('JD') : null,
+                child: _imageFile == null ?  Text('JD',style: TextStyle(fontSize: 24.0, color:Colors.blue.shade900),) : null,
               ),
             ),
           ),
-          const Text('John Doe'),
+          const Text('John Doe',style: TextStyle(color: Colors.white,fontSize: 20)),
           Expanded(
             child: GridView.builder(
               itemCount: 10, 
@@ -59,7 +72,7 @@ class ProfilePageState extends State<ProfilePage> {
                 return Center(
                   child: Text(
                     'Item $index',
-                    style: Theme.of(context).textTheme.headlineSmall,
+                    style: const TextStyle(color: Colors.white,fontSize: 20),
                   ),
                 );
               },
@@ -67,11 +80,13 @@ class ProfilePageState extends State<ProfilePage> {
           ),
         ],
       ),
+      ),
       floatingActionButton: FloatingActionButton(
+        backgroundColor: Colors.white,
         onPressed: () {
           Navigator.of(context).push(MaterialPageRoute(builder: (context) => const EditProfilePage()));
         },
-        child: const Icon(Icons.edit),
+        child: Icon(Icons.edit,color: Colors.blue.shade900),
       ),
     );
   }
@@ -80,16 +95,27 @@ class ProfilePageState extends State<ProfilePage> {
 class EditProfilePage extends StatelessWidget {
   const EditProfilePage({super.key});
 
-  
-
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title:const Text('Edit Profile'),
+        title:const Text('Edit Profile',style: TextStyle(color: Colors.white)),
+        backgroundColor: Colors.blue.shade400,
       ),
-      body: const Center(
-        child: Text('Here is where we can edit our profile'),
+      body: Container(
+        decoration:BoxDecoration(
+          gradient: LinearGradient(
+            begin: Alignment.topCenter,
+            end: Alignment.bottomCenter,
+            colors: [
+              Colors.blue.shade400,
+              Colors.blue.shade900,
+            ]
+          ),
+        ),
+        child: const Center(
+        child: Text('Here is where we can edit our profile',style: TextStyle(color: Colors.white,fontSize: 20),),
+      ),
       ),
     );
   }

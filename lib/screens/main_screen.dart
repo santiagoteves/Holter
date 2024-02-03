@@ -20,7 +20,12 @@ class HealtMonitoringPage extends StatelessWidget {
         actions: [
           Row(
             children: [
-              const Text('Perfil', style: TextStyle(color: Colors.white,fontSize: 20)),
+              InkWell(onTap: () {
+                Navigator.push(context, MaterialPageRoute(builder: (context) => const ProfilePage()), 
+              );
+              },
+              child: const Text('Perfil',style:TextStyle(color: Colors.white, fontSize: 20)),
+              ),
               IconButton(
                 icon: const Icon(Icons.account_circle,size: 40,color: Colors.white,),
                 onPressed: () {
