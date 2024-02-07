@@ -1,3 +1,4 @@
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 
 class ForgotPasswordScreen extends StatelessWidget {
@@ -63,11 +64,20 @@ class ForgotPasswordScreen extends StatelessWidget {
                   ),
                   const SizedBox(height: 20),
                   ElevatedButton(
-                    onPressed: () {
+                    onPressed: () async{
                       if (_formKey.currentState!.validate()) {
-                        ScaffoldMessenger.of(context).showSnackBar(
-                          const SnackBar(content: Text('Processing data')),
-                        );
+                        try {
+                          await FirebaseAuth.instance.sendPasswordResetEmail(email: emailController.text);
+                          // ignore: use_build_context_synchronously
+                          ScaffoldMessenger.of(context).showSnackBar(
+                            const SnackBar(content: Text('Enlace enviado. Por favor revisa su correo')),
+                          );
+                        } catch (e) {
+                          // ignore: use_build_context_synchronously
+                          ScaffoldMessenger.of(context).showSnackBar(
+                            const SnackBar(content: Text('Ocurrio un error. Por favor intentalo de nuevo')),
+                          );
+                        }
                       }
                     },
                     style: ElevatedButton.styleFrom(

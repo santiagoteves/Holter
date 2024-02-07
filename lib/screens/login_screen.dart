@@ -18,37 +18,38 @@ class LoginSCreenState extends State<LoginScreen>{
   final TextEditingController emailController = TextEditingController();
   final TextEditingController passwordController = TextEditingController();
 
-void iniciarSesion() async {
-      final context = this.context;
-      String email = emailController.text;
-      String password = passwordController.text;
+Future<void> iniciarSesion() async {
+  String email = emailController.text;
+  String password = passwordController.text;
 
-      if(email.isEmpty || password.isEmpty){
-        ScaffoldMessenger.of(context).showSnackBar(
-          const SnackBar(content: Text('Por favor complete los campos.'))
+  final messenger = ScaffoldMessenger.of(context);
+
+  if(email.isEmpty || password.isEmpty){
+    messenger.showSnackBar(
+      const SnackBar(content: Text('Por favor complete los campos.'))
+    );
+  }else {
+    try{
+      await FirebaseAuth.instance.signInWithEmailAndPassword(
+        email: email,
+        password: password,
+      );
+      Navigator.of(context).pushReplacement(MaterialPageRoute(builder: (_) => const HealtMonitoringPage()));
+    }on FirebaseAuthException catch (e){
+      if (e.code == "user-not-found"){
+        messenger.showSnackBar(
+          const SnackBar(content: Text('No se encontro usuario con ese correo'))
         );
-      }else {
-        try{
-          await FirebaseAuth.instance.signInWithEmailAndPassword(
-            email: email,
-            password: password,
-          );
-          Navigator.push(context, MaterialPageRoute(builder: (context) => const HealtMonitoringPage()));
-        }on FirebaseAuthException catch (e){
-          if (e.code == "user-not-found"){
-            ScaffoldMessenger.of(context).showSnackBar(
-              const SnackBar(content: Text('No se encontro usuario con ese correo'))
-            );
-          }else if (e.code == "wrong-password"){
-            ScaffoldMessenger.of(context).showSnackBar(
-              const SnackBar(content: Text('Contraseña incorrecta'))
-            );
-          }
-        }catch (e){
-          print(e);
-        }
+      }else if (e.code == "wrong-password"){
+        messenger.showSnackBar(
+          const SnackBar(content: Text('Contraseña incorrecta'))
+        );
       }
+    }catch (e){
+      debugPrint(e.toString());
+    }
   }
+}
   
   void forgotPassword(){
     Navigator.push(

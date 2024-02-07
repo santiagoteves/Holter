@@ -1,4 +1,6 @@
 import 'dart:io';
+import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
 
@@ -14,6 +16,38 @@ class ProfilePage extends StatefulWidget {
 class ProfilePageState extends State<ProfilePage> {
   XFile? _imageFile;
   final ImagePicker _picker = ImagePicker();
+  String? userName;
+
+  @override
+  void initState(){
+    super.initState();
+    setData();
+  }
+
+  setData() async {
+  User? user = FirebaseAuth.instance.currentUser;
+
+  bool done = false;
+
+  while (!done) {
+    try {
+      DocumentSnapshot snapshot = await FirebaseFirestore.instance.collection('users').doc(user!.uid).get();
+      final data = snapshot.data() as Map<String, dynamic>;
+
+      setState(() {
+        userName = data['name'];
+      });
+
+      done = true;
+    } catch (e) {
+      if (e is FirebaseException && e.code == 'unavailable') {
+        await Future.delayed(const Duration(seconds: 2));
+      } else {
+        rethrow;
+      }
+    } 
+  }
+}
 
   @override
   Widget build(BuildContext context) {
@@ -23,8 +57,10 @@ class ProfilePageState extends State<ProfilePage> {
         backgroundColor: Colors.blue.shade400,
         actions: <Widget>[
           TextButton(
-            onPressed: () {
-              // Acción para cerrar sesión
+            onPressed: () async {
+              await FirebaseAuth.instance.signOut();
+              // ignore: use_build_context_synchronously
+              Navigator.of(context).pushReplacementNamed('/login_screen');
             },
             child: const Text(
               'Cerrar sesión',
@@ -54,6 +90,10 @@ class ProfilePageState extends State<ProfilePage> {
                 setState(() {
                   _imageFile = selectedImage;
                 });
+                // ignore: use_build_context_synchronously
+                ScaffoldMessenger.of(context).showSnackBar(
+                  const SnackBar(content:   Text('Imagen de perfil actualizada')),
+                );
               },
               child: CircleAvatar(
                 radius: 30,
@@ -63,7 +103,7 @@ class ProfilePageState extends State<ProfilePage> {
               ),
             ),
           ),
-          const Text('John Doe',style: TextStyle(color: Colors.white,fontSize: 20)),
+          userName == null ? const CircularProgressIndicator() : Text('Welcome $userName!',style: const TextStyle(color: Colors.white, fontSize: 20)),
           Expanded(
             child: GridView.builder(
               itemCount: 10, 

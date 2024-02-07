@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:firebase_auth/firebase_auth.dart';
-import 'package:cloud_firestore/cloud_firestore.dart';
 
 
 class RegisterScreen extends StatefulWidget{
@@ -153,28 +152,34 @@ class RegisterScreenState extends State<RegisterScreen>{
                                     const SizedBox(height: 20),
                                     ElevatedButton(
                                       onPressed: () async {
-                                        var messenger = ScaffoldMessenger.of(context);
                                         if (_formKey.currentState!.validate()){
                                           try{
-                                            UserCredential userCredential = await _auth.createUserWithEmailAndPassword(
-                                              email: _emailController.text.trim(),
-                                              password: _passwordController.text.trim()
-                                            );
-                                            await FirebaseFirestore.instance.collection('users').doc(userCredential.user!.uid).set({
-                                              'name': _nameController.text,
-                                              'surname': _surnameController.text,
-                                              'email': _emailController.text,
-                                            });
-                                            messenger.showSnackBar(const SnackBar (content: Text('Usuario registrado con exito')));
-                                          } on FirebaseAuthException catch (e){
-                                            messenger.showSnackBar(SnackBar(content: Text(e.message ?? 'Error desconocido')));
+                                              ((await _auth.createUserWithEmailAndPassword( //It was necessary to add parentheses to ensure correct assignment
+                                                email: _emailController.text.trim(),
+                                                password: _passwordController.text.trim()
+                                              )).user as User).updateDisplayName("${_nameController.text.trim()} ${_surnameController.text.trim()}");
+                                            // ignore: use_build_context_synchronously
+                                            ScaffoldMessenger.of(context).showSnackBar(const SnackBar(content: Text('Usuario registrado exitosamente')));
+                                          }catch(e){
+                                            // ignore: avoid_print
+                                            print(e.toString());
+                                            String errorMessage;
+                                            if (e is FirebaseAuthException && e.code == 'weak-password'){
+                                              errorMessage = 'La contraseña proporcionada es muy débil.';
+                                            }else if (e is FirebaseAuthException && e.code == 'email-already-in-use'){
+                                              errorMessage = 'La cuenta ya existe para ese correo.';
+                                            }else{
+                                              errorMessage = 'Error desconocido';
+                                            }
+                                            // ignore: use_build_context_synchronously
+                                            ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text(errorMessage)));
                                           }
                                         }
                                       },
-                                      style: ElevatedButton.styleFrom(
-                                        backgroundColor: Colors.white,
-                                        foregroundColor: Colors.blue.shade900,
-                                      ),
+                                    style: ElevatedButton.styleFrom(
+                                      backgroundColor: Colors.white,
+                                      foregroundColor: Colors.blue.shade900,
+                                    ),
                                       child: const Text('Sign up'),
                                     ),
                                   ],
