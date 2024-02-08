@@ -1,8 +1,49 @@
 import 'package:flutter/material.dart';
 import 'package:holter_app/screens/profile.dart';
+import 'package:firebase_auth/firebase_auth.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
 
 class HealtMonitoringPage extends StatelessWidget {
   const HealtMonitoringPage({super.key});
+
+  @override
+  HealtMonitoringPageState createState() => HealtMonitoringPageState();
+}
+
+class HealtMonitoringPageState extends State<HealtMonitoringPage>{
+
+  String? userName;
+
+  @override
+  void initState(){
+    super.initState();
+    setData();
+  }
+
+  setData() async {
+    User? user = FirebaseAuth.instance.currentUser;
+
+    bool done = false;
+
+    while (!done){
+      try{
+        DocumentSnapshot snapshot = await FirebaseFirestore.instance.collection('users').doc(user!.uid).get();
+      final data = snapshot.data() as Map<String , dynamic>;
+
+      setState(() {
+        userName = data['name'];
+      });
+
+      done = true;
+      } catch (e){
+        if (e is FirebaseException && e.code == 'unavailabe'){
+          await Future.delayed(const Duration(seconds: 2));
+        }else {
+          rethrow;
+        }
+      }
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -50,14 +91,15 @@ class HealtMonitoringPage extends StatelessWidget {
         ),
         child: Column(
           children: [
-            const Padding(
-              padding: EdgeInsets.all(16.0),
-              child: Text(
-                'Hola Santiago',
-                style:
-                    TextStyle(fontSize: 24, fontWeight: FontWeight.bold, color: Colors.white),
+            Padding(
+              padding: const  EdgeInsets.all(16.0),
+              child: userName == null ? const CircularProgressIndicator() : Text(
+                'Hola $userName', style: const TextStyle(fontSize: 24, fontWeight: FontWeight.bold, color: Colors.white),
+              )
               ),
+              ]
             ),
+            
             const Padding(
               padding: EdgeInsets.all(16.0),
               child: Text(

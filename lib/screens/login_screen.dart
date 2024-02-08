@@ -121,6 +121,7 @@ Future<void> iniciarSesion() async {
             controller: passwordController,
             decoration: InputDecoration(
               labelText: 'Contraseña',
+              hintText: 'Ingrese su contraseña',
               labelStyle: const TextStyle(
                 color: Colors.white,
               ),
