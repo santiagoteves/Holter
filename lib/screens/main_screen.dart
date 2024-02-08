@@ -3,7 +3,7 @@ import 'package:holter_app/screens/profile.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 
-class HealtMonitoringPage extends StatelessWidget {
+class HealtMonitoringPage extends StatefulWidget {
   const HealtMonitoringPage({super.key});
 
   @override
@@ -28,13 +28,13 @@ class HealtMonitoringPageState extends State<HealtMonitoringPage>{
     while (!done){
       try{
         DocumentSnapshot snapshot = await FirebaseFirestore.instance.collection('users').doc(user!.uid).get();
-      final data = snapshot.data() as Map<String , dynamic>;
+        final data = snapshot.data() as Map<String , dynamic>;
 
-      setState(() {
-        userName = data['name'];
-      });
+        setState(() {
+          userName = data['name'];
+        });
 
-      done = true;
+        done = true;
       } catch (e){
         if (e is FirebaseException && e.code == 'unavailabe'){
           await Future.delayed(const Duration(seconds: 2));
@@ -61,11 +61,14 @@ class HealtMonitoringPageState extends State<HealtMonitoringPage>{
         actions: [
           Row(
             children: [
-              InkWell(onTap: () {
-                Navigator.push(context, MaterialPageRoute(builder: (context) => const ProfilePage()), 
-              );
-              },
-              child: const Text('Perfil',style:TextStyle(color: Colors.white, fontSize: 20)),
+              InkWell(
+                onTap: () {
+                  Navigator.push(
+                    context, 
+                    MaterialPageRoute(builder: (context) => const ProfilePage()),
+                  );
+                },
+                child: const Text('Perfil',style:TextStyle(color: Colors.white, fontSize: 20)),
               ),
               IconButton(
                 icon: const Icon(Icons.account_circle,size: 40,color: Colors.white,),
@@ -92,14 +95,14 @@ class HealtMonitoringPageState extends State<HealtMonitoringPage>{
         child: Column(
           children: [
             Padding(
-              padding: const  EdgeInsets.all(16.0),
-              child: userName == null ? const CircularProgressIndicator() : Text(
-                'Hola $userName', style: const TextStyle(fontSize: 24, fontWeight: FontWeight.bold, color: Colors.white),
-              )
-              ),
-              ]
+              padding: const EdgeInsets.all(16.0),
+              child: userName == null 
+                  ? const CircularProgressIndicator() 
+                  : Text(
+                      'Hola $userName', 
+                      style: const TextStyle(fontSize: 24, fontWeight: FontWeight.bold, color: Colors.white),
+                    ),
             ),
-            
             const Padding(
               padding: EdgeInsets.all(16.0),
               child: Text(
